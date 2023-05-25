@@ -92,8 +92,13 @@ class TilePositioningState {
   TilePositioningState(this.zoomScale, FlutterMapState mapState, double zoom) {
     final pixelOrigin =
         mapState.getNewPixelOrigin(mapState.center, mapState.zoom).round();
-    origin = mapState.project(mapState.unproject(pixelOrigin, zoom), zoom);
-    translate = origin.multiplyBy(zoomScale) - pixelOrigin;
+    try {
+      origin = mapState.project(mapState.unproject(pixelOrigin, zoom), zoom);
+      translate = origin.multiplyBy(zoomScale) - pixelOrigin;
+    } on Exception catch (e, s) {
+      debugPrint(e.toString());
+      debugPrintStack(label: s.toString());
+    }
   }
 }
 
